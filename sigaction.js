@@ -129,7 +129,7 @@
         var ctx = ev.target[SIGCTX];
 
         if(ctx){
-            sigraise.apply(sigraise, [ctx.name, ev].concat(ctx.args))
+            sigraise.apply(sigraise, [ctx.name, ev].concat(ctx.args));
         }
     }
 
