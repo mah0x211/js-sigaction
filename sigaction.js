@@ -147,12 +147,19 @@
 
 
     // Public API
+    /**
+     * Callback function for signal-name.
+     * @global
+     * @callback actionCallback
+     * @param {...*} var_args variable-arguments
+     */
 
     /**
      * Register an action for specified signal-name
-     * @param {String} signame
-     * @param {Function} act
-     * @param {*} ctx
+     * @global
+     * @param {String} signame signal-name
+     * @param {actionCallback} act callback function for signal-name
+     * @param {*} ctx the value used as `this` object
      * @throws {TypeError} throw an error if the argument is invalid
      */
     function sigaction(signame, act, ctx)
@@ -192,8 +199,9 @@
 
     /**
      * Send a signal
-     * @param {String} signame
-     * @param {...*} var_args
+     * @global
+     * @param {String} signame signal-name
+     * @param {...*} var_args arguments for actionCallback
      */
     function sigraise(signame, var_args)
     {
