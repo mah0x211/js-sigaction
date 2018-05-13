@@ -5,6 +5,7 @@
   "main": "sigaction.js",
   "dependencies": {
     "eslint": "^4.19.1",
+    "google-closure-compiler": "^20180506.0.0",
     "npm": "^6.0.1"
   },
   "devDependencies": {
@@ -16,6 +17,7 @@
   },
   "scripts": {
     "lint": "eslint sigaction.js",
+    "minify": "google-closure-compiler --compilation_level ADVANCED --js sigaction.js --js_output_file sigaction.min.js --externs node_modules/google-closure-compiler/contrib/externs/svg.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
