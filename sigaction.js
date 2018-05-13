@@ -128,9 +128,13 @@
             }
 
             var attr = elm.dataset.sigaction.split('|'),
-                name = attr[0],
-                evts = (attr[1] || '').split(','),
-                args = (attr[2] || '').split(',');
+                name = attr[0].trim(),
+                evts = (attr[1] || '').split(',').map(function(str){
+                    return str.trim();
+                }),
+                args = (attr[2] || '').split(',').map(function(str){
+                    return str.trim();
+                });
 
             if(attr.length < 2 || attr.length > 3){
                 throw new SyntaxError(
