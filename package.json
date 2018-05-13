@@ -1,0 +1,31 @@
+{
+  "name": "js-sigaction",
+  "version": "0.1.0",
+  "description": "",
+  "main": "sigaction.js",
+  "dependencies": {
+    "eslint": "^4.19.1",
+    "npm": "^6.0.1"
+  },
+  "devDependencies": {
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.1.0"
+  },
+  "scripts": {
+    "lint": "eslint sigaction.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mah0x211/js-sigaction.git"
+  },
+  "author": "Masatoshi Fukunaga",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mah0x211/js-sigaction/issues"
+  },
+  "homepage": "https://github.com/mah0x211/js-sigaction#readme"
+}
