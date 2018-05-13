@@ -72,14 +72,14 @@
 
     function watch(elm)
     {
-        if(isElm(elm) && elm.dataset.sigaction)
+        if(isElm(elm) && elm.dataset['sigaction'])
         {
             // remove old context
             if(elm[SIGCTX]){
                 unwatch(elm);
             }
 
-            var attr = elm.dataset.sigaction.split('|'),
+            var attr = elm.dataset['sigaction'].split('|'),
                 name = attr[0].trim(),
                 evts = (attr[1] || '').split(',').map(function(str){
                     return str.trim();
@@ -116,7 +116,7 @@
             {
                 case 'attributes':
                     var elm = record.target;
-                    if(elm.dataset.sigaction){
+                    if(elm.dataset['sigaction']){
                         watch(elm);
                     }
                     else {
@@ -195,7 +195,7 @@
             ctx: ctx || act
         });
     }
-    window.sigaction = sigaction;
+    window['sigaction'] = sigaction;
 
     /**
      * Send a signal
@@ -227,6 +227,6 @@
             });
         }
     }
-    window.sigraise = sigraise;
+    window['sigraise'] = sigraise;
 })();
 
