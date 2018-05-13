@@ -29,6 +29,7 @@
 
     // constants
     var SIGCTX = '_signal_ctx';
+    var ATTRID = 'sigraise';
     // protected-variables
     var SIGACT = {};
 
@@ -72,14 +73,14 @@
 
     function watch(elm)
     {
-        if(isElm(elm) && elm.dataset['sigaction'])
+        if(isElm(elm) && elm.dataset[ATTRID])
         {
             // remove old context
             if(elm[SIGCTX]){
                 unwatch(elm);
             }
 
-            var attr = elm.dataset['sigaction'].split('|'),
+            var attr = elm.dataset[ATTRID].split('|'),
                 name = attr[0].trim(),
                 evts = (attr[1] || '').split(',').map(function(str){
                     return str.trim();
@@ -116,7 +117,7 @@
             {
                 case 'attributes':
                     var elm = record.target;
-                    if(elm.dataset['sigaction']){
+                    if(elm.dataset[ATTRID]){
                         watch(elm);
                     }
                     else {
@@ -141,7 +142,9 @@
             attributes: true
         });
         // register elements
-        toArray(document.querySelectorAll('*[data-sigaction]')).forEach(watch);
+        toArray(
+            document.querySelectorAll('*[data-' + ATTRID + ']')
+        ).forEach(watch);
     }
     window.addEventListener('load', initialize);
 
