@@ -25,6 +25,10 @@
             "error",
             "always"
         ],
+        "no-unused-vars": [
+            "error",
+            { "argsIgnorePattern": "^var_args$" }
+        ],
         "no-console": "off"
     }
 }

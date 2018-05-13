@@ -195,7 +195,7 @@
      * @param {String} signame
      * @param {...*} var_args
      */
-    function sigraise(signame)
+    function sigraise(signame, var_args)
     {
         if(!isStr(signame)){
             throw new TypeError('signame must be string');
