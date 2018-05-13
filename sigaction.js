@@ -48,69 +48,6 @@
         return Array.prototype.slice.call(nodeList);
     }
 
-    // exports
-    function sigaction(signame, act, ctx)
-    {
-        if(!isStr(signame)){
-            throw new TypeError('signame must be string');
-        }
-        else if(!isFunc(act)){
-            throw new TypeError( 'act must be function' );
-        }
-
-        var acts = SIGACT[signame];
-
-        if(acts)
-        {
-            // check existing
-            for(var i = 0, len = acts.length; i < len; i++)
-            {
-                // already exists
-                if(acts[i].act === act){
-                    return;
-                }
-            }
-        }
-        else {
-            acts = [];
-            SIGACT[signame] = acts;
-        }
-
-        // add action
-        acts.push({
-            act: act,
-            ctx: ctx || act
-        });
-    }
-    window.sigaction = sigaction;
-
-    function sigraise(signame)
-    {
-        if(!isStr(signame)){
-            throw new TypeError('signame must be string');
-        }
-
-        var acts = SIGACT[signame];
-        if(acts)
-        {
-            var args = toArray(arguments);
-
-            // remove signame
-            args.shift();
-
-            acts.forEach(function(action)
-            {
-                try {
-                    action.act.apply(action.ctx, args);
-                }catch(e){
-                    console.error(e);
-                }
-            });
-        }
-    }
-    window.sigraise = sigraise;
-
-
     function unwatch(elm)
     {
         if(isElm(elm) && elm[SIGCTX])
@@ -209,9 +146,79 @@
     window.addEventListener('load', initialize);
 
 
+    // Public API
 
+    /**
+     * Register an action for specified signal-name
+     * @param {String} signame
+     * @param {Function} act
+     * @param {*} ctx
+     * @throws {TypeError} throw an error if the argument is invalid
+     */
+    function sigaction(signame, act, ctx)
+    {
+        if(!isStr(signame)){
+            throw new TypeError('signame must be string');
+        }
+        else if(!isFunc(act)){
+            throw new TypeError( 'act must be function' );
+        }
 
+        var acts = SIGACT[signame];
 
+        if(acts)
+        {
+            // check existing
+            for(var i = 0, len = acts.length; i < len; i++)
+            {
+                // already exists
+                if(acts[i].act === act){
+                    return;
+                }
+            }
+        }
+        else {
+            acts = [];
+            SIGACT[signame] = acts;
+        }
 
+        // add action
+        acts.push({
+            act: act,
+            ctx: ctx || act
+        });
+    }
+    window.sigaction = sigaction;
+
+    /**
+     * Send a signal
+     * @param {String} signame
+     * @param {...*} var_args
+     */
+    function sigraise(signame)
+    {
+        if(!isStr(signame)){
+            throw new TypeError('signame must be string');
+        }
+
+        var acts = SIGACT[signame];
+        if(acts)
+        {
+            var args = toArray(arguments);
+
+            // remove signame
+            args.shift();
+
+            acts.forEach(function(action)
+            {
+                try {
+                    action.act.apply(action.ctx, args);
+                }catch(e){
+                    console.error(e);
+                }
+            });
+        }
+    }
+    window.sigraise = sigraise;
 })();
 
