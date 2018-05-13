@@ -84,6 +84,32 @@
     }
     window.sigaction = sigaction;
 
+    function sigraise(signame)
+    {
+        if(!isStr(signame)){
+            throw new TypeError('signame must be string');
+        }
+
+        var acts = SIGACT[signame];
+        if(acts)
+        {
+            var args = toArray(arguments);
+
+            // remove signame
+            args.shift();
+
+            acts.forEach(function(action)
+            {
+                try {
+                    action.act.apply(action.ctx, args);
+                }catch(e){
+                    console.error(e);
+                }
+            });
+        }
+    }
+    window.sigraise = sigraise;
+
 
     function unwatch(elm)
     {
@@ -100,21 +126,10 @@
 
     function raise(ev)
     {
-        var ctx = ev.target[SIGCTX],
-            acts = ctx && SIGACT[ctx.name];
+        var ctx = ev.target[SIGCTX];
 
-        if(acts)
-        {
-            var args = [ev].concat(ctx.args);
-
-            acts.forEach(function(action)
-            {
-                try {
-                    action.act.apply(action.ctx, args);
-                }catch(e){
-                    console.error(e);
-                }
-            });
+        if(ctx){
+            sigraise.apply(sigraise, [ctx.name, ev].concat(ctx.args))
         }
     }
 
