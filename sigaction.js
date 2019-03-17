@@ -164,6 +164,7 @@
      * @param {actionCallback} act callback function for signal-name
      * @param {*} ctx the value used as `this` object
      * @throws {TypeError} throw an error if the argument is invalid
+     * @return {Boolean} true if added
      */
     function sigaction(signame, act, ctx)
     {
@@ -175,7 +176,6 @@
         }
 
         var acts = SIGACT[signame];
-
         if(acts)
         {
             // check existing
@@ -183,7 +183,7 @@
             {
                 // already exists
                 if(acts[i].act === act){
-                    return;
+                    return false;
                 }
             }
         }
@@ -197,6 +197,8 @@
             act: act,
             ctx: ctx || act
         });
+
+        return true;
     }
     window['sigaction'] = sigaction;
 
@@ -205,6 +207,7 @@
      * @global
      * @param {String} signame signal-name
      * @param {...*} var_args arguments for actionCallback
+     * @return {Number} number of invokes
      */
     function sigraise(signame, var_args)
     {
@@ -215,20 +218,26 @@
         var acts = SIGACT[signame];
         if(acts)
         {
-            var args = toArray(arguments);
+            var args = toArray(arguments),
+                ninvoke = 0;
 
             // remove signame
             args.shift();
-
+            // invoke actions
             acts.forEach(function(action)
             {
                 try {
                     action.act.apply(action.ctx, args);
+                    ninvoke++;
                 }catch(e){
                     console.error(e);
                 }
             });
+
+            return ninvoke;
         }
+
+        return 0;
     }
     window['sigraise'] = sigraise;
 })();
