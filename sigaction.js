@@ -152,8 +152,7 @@
     // Public API
     /**
      * Callback function for signal-name.
-     * @global
-     * @callback actionCallback
+     * @callback sigCallback
      * @param {...*} var_args variable-arguments
      */
 
@@ -161,10 +160,10 @@
      * Add an action for specified signal-name
      * @global
      * @param {String} signame signal-name
-     * @param {actionCallback} act callback function for signal-name
+     * @param {sigCallback} act callback function for signal-name
      * @param {*} ctx the value used as `this` object
      * @throws {TypeError} throw an error if the argument is invalid
-     * @return {Boolean} true if added
+     * @return {boolean} true if added
      */
     function sigAdd(signame, act, ctx)
     {
@@ -205,9 +204,9 @@
      * Remove an action for specified signal-name
      * @global
      * @param {String} signame signal-name
-     * @param {actionCallback} act callback function for signal-name
+     * @param {sigCallback} act callback function for signal-name
      * @throws {TypeError} throw an error if the argument is invalid
-     * @return {Boolean} true if removed
+     * @return {boolean} true if removed
      */
     function sigRemove(signame, act)
     {
@@ -241,7 +240,8 @@
      * @global
      * @param {String} signame signal-name
      * @param {...*} var_args arguments for actionCallback
-     * @return {Number} number of invokes
+     * @throws {TypeError} throw an error if signame is invalid
+     * @return {number} number of invokes
      */
     function sigRaise(signame, var_args)
     {
