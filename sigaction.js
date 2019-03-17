@@ -202,6 +202,41 @@
     }
 
     /**
+     * Remove an action for specified signal-name
+     * @global
+     * @param {String} signame signal-name
+     * @param {actionCallback} act callback function for signal-name
+     * @throws {TypeError} throw an error if the argument is invalid
+     * @return {Boolean} true if removed
+     */
+    function sigRemove(signame, act)
+    {
+        if(!isStr(signame)){
+            throw new TypeError('signame must be string');
+        }
+        else if(!isFunc(act)){
+            throw new TypeError( 'act must be function' );
+        }
+
+        var acts = SIGACT[signame];
+        if(acts)
+        {
+            // check existing
+            for(var i = 0, len = acts.length; i < len; i++)
+            {
+                // found action
+                if(acts[i].act === act){
+                    acts.splice(i, 1);
+                    return true;
+                }
+            }
+        }
+
+        // not found
+        return false;
+    }
+
+    /**
      * Send a signal
      * @global
      * @param {String} signame signal-name
@@ -242,6 +277,7 @@
     // export sigaction to global
     window['sigaction'] = {
         add: sigAdd,
+        remove: sigRemove,
         raise: sigRaise
     };
 })();
