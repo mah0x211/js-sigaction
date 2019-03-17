@@ -67,7 +67,7 @@
         var ctx = ev.target[SIGCTX];
 
         if(ctx){
-            sigraise.apply(sigraise, [ctx.name, ev].concat(ctx.args));
+            sigRaise.apply(sigRaise, [ctx.name, ev].concat(ctx.args));
         }
     }
 
@@ -158,7 +158,7 @@
      */
 
     /**
-     * Register an action for specified signal-name
+     * Add an action for specified signal-name
      * @global
      * @param {String} signame signal-name
      * @param {actionCallback} act callback function for signal-name
@@ -166,7 +166,7 @@
      * @throws {TypeError} throw an error if the argument is invalid
      * @return {Boolean} true if added
      */
-    function sigaction(signame, act, ctx)
+    function sigAdd(signame, act, ctx)
     {
         if(!isStr(signame)){
             throw new TypeError('signame must be string');
@@ -200,7 +200,6 @@
 
         return true;
     }
-    window['sigaction'] = sigaction;
 
     /**
      * Send a signal
@@ -209,7 +208,7 @@
      * @param {...*} var_args arguments for actionCallback
      * @return {Number} number of invokes
      */
-    function sigraise(signame, var_args)
+    function sigRaise(signame, var_args)
     {
         if(!isStr(signame)){
             throw new TypeError('signame must be string');
@@ -239,6 +238,11 @@
 
         return 0;
     }
-    window['sigraise'] = sigraise;
+
+    // export sigaction to global
+    window['sigaction'] = {
+        add: sigAdd,
+        raise: sigRaise
+    };
 })();
 
