@@ -276,9 +276,9 @@
 
     // export sigaction to global
     window['sigaction'] = {
-        add: sigAdd,
-        remove: sigRemove,
-        raise: sigRaise
+        'add': sigAdd,
+        'remove': sigRemove,
+        'raise': sigRaise
     };
 })();
 
