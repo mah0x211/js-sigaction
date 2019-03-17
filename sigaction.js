@@ -280,5 +280,10 @@
         'remove': sigRemove,
         'raise': sigRaise
     };
+
+    // call if SigactionLoaded function is defined
+    if(isFunc(window['SigactionLoaded'])){
+        window['SigactionLoaded']();
+    }
 })();
 
