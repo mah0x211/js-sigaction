@@ -29,7 +29,7 @@
 
     // constants
     var SIGCTX = '_signal_ctx';
-    var ATTRID = 'sigraise';
+    var ATTRID = 'sigaction';
     // protected-variables
     var SIGACT = {};
 
