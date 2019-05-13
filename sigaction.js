@@ -24,7 +24,7 @@
  * Created by Masatoshi Fukunaga on 18/05/13.
  */
 
-(function(){
+(function () {
     'use strict';
 
     // constants
@@ -36,25 +36,26 @@
     //
     // helper functions
     //
-    function isElm(elm){
+    function isElm(elm) {
         return (elm instanceof HTMLElement) || (elm instanceof SVGElement);
     }
-    function isStr(str){
-        return typeof(str) === 'string';
+
+    function isStr(str) {
+        return typeof (str) === 'string';
     }
-    function isFunc(fn){
-        return typeof(fn) === 'function';
+
+    function isFunc(fn) {
+        return typeof (fn) === 'function';
     }
-    function toArray(nodeList){
+
+    function toArray(nodeList) {
         return Array.prototype.slice.call(nodeList);
     }
 
-    function unwatch(elm)
-    {
-        if(isElm(elm) && elm[SIGCTX])
-        {
+    function unwatch(elm) {
+        if (isElm(elm) && elm[SIGCTX]) {
             // remove events
-            elm[SIGCTX].evts.forEach(function(ev){
+            elm[SIGCTX].evts.forEach(function (ev) {
                 elm.removeEventListener(ev, raise);
             });
             // void context
@@ -62,41 +63,38 @@
         }
     }
 
-    function raise(ev)
-    {
+    function raise(ev) {
         var ctx = ev.target[SIGCTX];
 
-        if(ctx){
+        if (ctx) {
             sigRaise.apply(sigRaise, [ctx.name, ev].concat(ctx.args));
         }
     }
 
-    function watch(elm)
-    {
-        if(isElm(elm) && elm.dataset[ATTRID])
-        {
+    function watch(elm) {
+        if (isElm(elm) && elm.dataset[ATTRID]) {
             // remove old context
-            if(elm[SIGCTX]){
+            if (elm[SIGCTX]) {
                 unwatch(elm);
             }
 
             var attr = elm.dataset[ATTRID].split('|'),
                 name = attr[0].trim(),
-                evts = (attr[1] || '').split(',').map(function(str){
+                evts = (attr[1] || '').split(',').map(function (str) {
                     return str.trim();
                 }),
-                args = (attr[2] || '').split(',').map(function(str){
+                args = (attr[2] || '').split(',').map(function (str) {
                     return str.trim();
                 });
 
-            if(attr.length < 2 || attr.length > 3){
+            if (attr.length < 2 || attr.length > 3) {
                 throw new SyntaxError(
                     'data-signal format must be signame|event,...|arg,...'
                 );
             }
 
             // add events
-            evts.forEach(function(ev){
+            evts.forEach(function (ev) {
                 elm.addEventListener(ev, raise);
             });
             // save context
@@ -109,18 +107,14 @@
     }
 
     // automatically watch or unwatch
-    function onDOMChanged(records)
-    {
-        records.forEach(function(record)
-        {
-            switch(record.type)
-            {
+    function onDOMChanged(records) {
+        records.forEach(function (record) {
+            switch (record.type) {
                 case 'attributes':
                     var elm = record.target;
-                    if(elm.dataset[ATTRID]){
+                    if (elm.dataset[ATTRID]) {
                         watch(elm);
-                    }
-                    else {
+                    } else {
                         unwatch(elm);
                     }
                     break;
@@ -133,8 +127,7 @@
         });
     }
 
-    function initialize()
-    {
+    function initialize() {
         window.removeEventListener('load', initialize);
         (new MutationObserver(onDOMChanged)).observe(document.body, {
             childList: true,
@@ -165,28 +158,23 @@
      * @throws {TypeError} throw an error if the argument is invalid
      * @return {boolean} true if added
      */
-    function sigAdd(signame, act, ctx)
-    {
-        if(!isStr(signame)){
+    function sigAdd(signame, act, ctx) {
+        if (!isStr(signame)) {
             throw new TypeError('signame must be string');
-        }
-        else if(!isFunc(act)){
-            throw new TypeError( 'act must be function' );
+        } else if (!isFunc(act)) {
+            throw new TypeError('act must be function');
         }
 
         var acts = SIGACT[signame];
-        if(acts)
-        {
+        if (acts) {
             // check existing
-            for(var i = 0, len = acts.length; i < len; i++)
-            {
+            for (var i = 0, len = acts.length; i < len; i++) {
                 // already exists
-                if(acts[i].act === act){
+                if (acts[i].act === act) {
                     return false;
                 }
             }
-        }
-        else {
+        } else {
             acts = [];
             SIGACT[signame] = acts;
         }
@@ -208,23 +196,19 @@
      * @throws {TypeError} throw an error if the argument is invalid
      * @return {boolean} true if removed
      */
-    function sigRemove(signame, act)
-    {
-        if(!isStr(signame)){
+    function sigRemove(signame, act) {
+        if (!isStr(signame)) {
             throw new TypeError('signame must be string');
-        }
-        else if(!isFunc(act)){
-            throw new TypeError( 'act must be function' );
+        } else if (!isFunc(act)) {
+            throw new TypeError('act must be function');
         }
 
         var acts = SIGACT[signame];
-        if(acts)
-        {
+        if (acts) {
             // check existing
-            for(var i = 0, len = acts.length; i < len; i++)
-            {
+            for (var i = 0, len = acts.length; i < len; i++) {
                 // found action
-                if(acts[i].act === act){
+                if (acts[i].act === act) {
                     acts.splice(i, 1);
                     return true;
                 }
@@ -243,27 +227,24 @@
      * @throws {TypeError} throw an error if signame is invalid
      * @return {number} number of invokes
      */
-    function sigRaise(signame, var_args)
-    {
-        if(!isStr(signame)){
+    function sigRaise(signame, var_args) {
+        if (!isStr(signame)) {
             throw new TypeError('signame must be string');
         }
 
         var acts = SIGACT[signame];
-        if(acts)
-        {
+        if (acts) {
             var args = toArray(arguments),
                 ninvoke = 0;
 
             // remove signame
             args.shift();
             // invoke actions
-            acts.forEach(function(action)
-            {
+            acts.forEach(function (action) {
                 try {
                     action.act.apply(action.ctx, args);
                     ninvoke++;
-                }catch(e){
+                } catch (e) {
                     console.error(e);
                 }
             });
@@ -282,8 +263,7 @@
     };
 
     // call if SigactionLoaded function is defined
-    if(isFunc(window['SigactionLoaded'])){
+    if (isFunc(window['SigactionLoaded'])) {
         window['SigactionLoaded']();
     }
 })();
-
