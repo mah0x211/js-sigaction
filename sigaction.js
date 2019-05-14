@@ -139,7 +139,7 @@
             document.querySelectorAll('*[data-' + ATTRID + ']')
         ).forEach(watch);
     }
-    window.addEventListener('load', initialize);
+    window.addEventListener('DOMContentLoaded', initialize);
 
 
     // Public API
