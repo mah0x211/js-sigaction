@@ -138,6 +138,11 @@
         toArray(
             document.querySelectorAll('*[data-' + ATTRID + ']')
         ).forEach(watch);
+
+        // call if SigactionLoaded function is defined
+        if (isFunc(window['SigactionLoaded'])) {
+            window['SigactionLoaded']();
+        }
     }
     window.addEventListener('DOMContentLoaded', initialize);
 
@@ -261,9 +266,4 @@
         'remove': sigRemove,
         'raise': sigRaise
     };
-
-    // call if SigactionLoaded function is defined
-    if (isFunc(window['SigactionLoaded'])) {
-        window['SigactionLoaded']();
-    }
 })();
