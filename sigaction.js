@@ -28,10 +28,10 @@
     'use strict';
 
     // constants
-    var SIGCTX = '_signal_ctx';
-    var ATTRID = 'sigaction';
+    const SIGCTX = '_signal_ctx';
+    const ATTRID = 'sigaction';
     // protected-variables
-    var SIGACT = {};
+    const SIGACT = {};
 
     //
     // helper functions
@@ -64,8 +64,7 @@
     }
 
     function raise(ev) {
-        var ctx = ev.target[SIGCTX];
-
+        const ctx = ev.target[SIGCTX];
         if (ctx) {
             sigRaise.apply(sigRaise, [ctx.name, ev].concat(ctx.args));
         }
@@ -78,14 +77,14 @@
                 unwatch(elm);
             }
 
-            var attr = elm.dataset[ATTRID].split('|'),
-                name = attr[0].trim(),
-                evs = (attr[1] || '').split(',').map(function(str) {
-                    return str.trim();
-                }),
-                args = (attr[2] || '').split(',').map(function(str) {
-                    return str.trim();
-                });
+            const attr = elm.dataset[ATTRID].split('|');
+            const name = attr[0].trim();
+            const evs = (attr[1] || '').split(',').map(function(str) {
+                return str.trim();
+            });
+            const args = (attr[2] || '').split(',').map(function(str) {
+                return str.trim();
+            });
 
             if (attr.length < 2 || attr.length > 3) {
                 throw new SyntaxError(
@@ -111,11 +110,10 @@
         records.forEach(function(record) {
             switch (record.type) {
                 case 'attributes':
-                    var elm = record.target;
-                    if (elm.dataset[ATTRID]) {
-                        watch(elm);
+                    if (record.target.dataset[ATTRID]) {
+                        watch(record.target);
                     } else {
-                        unwatch(elm);
+                        unwatch(record.target);
                     }
                     break;
 
@@ -169,10 +167,11 @@
             throw new TypeError('act must be function');
         }
 
-        var acts = SIGACT[signame];
+        let acts = SIGACT[signame];
         if (acts) {
             // check existing
-            for (var i = 0, len = acts.length; i < len; i++) {
+            const len = acts.length;
+            for (let i = 0; i < len; i++) {
                 // already exists
                 if (acts[i].act === act) {
                     return false;
@@ -207,10 +206,11 @@
             throw new TypeError('act must be function');
         }
 
-        var acts = SIGACT[signame];
+        const acts = SIGACT[signame];
         if (acts) {
             // check existing
-            for (var i = 0, len = acts.length; i < len; i++) {
+            const len = acts.length;
+            for (let i = 0; i < len; i++) {
                 // found action
                 if (acts[i].act === act) {
                     acts.splice(i, 1);
@@ -236,10 +236,10 @@
             throw new TypeError('signame must be string');
         }
 
-        var acts = SIGACT[signame];
+        const acts = SIGACT[signame];
         if (acts) {
-            var args = toArray(arguments),
-                ninvoke = 0;
+            const args = toArray(arguments);
+            let ninvoke = 0;
 
             // remove signame
             args.shift();
