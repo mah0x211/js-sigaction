@@ -28,7 +28,7 @@
     'use strict';
 
     // constants
-    const SIGCTX = '_signal_ctx';
+    const SIGCTX = '_sa_ctx';
     // protected-variables
     const SIGACT = {};
 
