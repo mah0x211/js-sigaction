@@ -24,7 +24,7 @@
  * Created by Masatoshi Fukunaga on 18/05/13.
  */
 
-(function () {
+(function() {
     'use strict';
 
     // constants
@@ -37,15 +37,15 @@
     // helper functions
     //
     function isElm(elm) {
-        return (elm instanceof HTMLElement) || (elm instanceof SVGElement);
+        return elm instanceof HTMLElement || elm instanceof SVGElement;
     }
 
     function isStr(str) {
-        return typeof (str) === 'string';
+        return typeof str === 'string';
     }
 
     function isFunc(fn) {
-        return typeof (fn) === 'function';
+        return typeof fn === 'function';
     }
 
     function toArray(nodeList) {
@@ -55,7 +55,7 @@
     function unwatch(elm) {
         if (isElm(elm) && elm[SIGCTX]) {
             // remove events
-            elm[SIGCTX].evts.forEach(function (ev) {
+            elm[SIGCTX].evs.forEach(function(ev) {
                 elm.removeEventListener(ev, raise);
             });
             // void context
@@ -80,10 +80,10 @@
 
             var attr = elm.dataset[ATTRID].split('|'),
                 name = attr[0].trim(),
-                evts = (attr[1] || '').split(',').map(function (str) {
+                evs = (attr[1] || '').split(',').map(function(str) {
                     return str.trim();
                 }),
-                args = (attr[2] || '').split(',').map(function (str) {
+                args = (attr[2] || '').split(',').map(function(str) {
                     return str.trim();
                 });
 
@@ -94,13 +94,13 @@
             }
 
             // add events
-            evts.forEach(function (ev) {
+            evs.forEach(function(ev) {
                 elm.addEventListener(ev, raise);
             });
             // save context
             elm[SIGCTX] = {
                 name: name,
-                evts: evts,
+                evs: evs,
                 args: args
             };
         }
@@ -108,7 +108,7 @@
 
     // automatically watch or unwatch
     function onDOMChanged(records) {
-        records.forEach(function (record) {
+        records.forEach(function(record) {
             switch (record.type) {
                 case 'attributes':
                     var elm = record.target;
@@ -129,15 +129,15 @@
 
     function initialize() {
         window.removeEventListener('load', initialize);
-        (new MutationObserver(onDOMChanged)).observe(document.body, {
+        new MutationObserver(onDOMChanged).observe(document.body, {
             childList: true,
             subtree: true,
             attributes: true
         });
         // register elements
-        toArray(
-            document.querySelectorAll('*[data-' + ATTRID + ']')
-        ).forEach(watch);
+        toArray(document.querySelectorAll('*[data-' + ATTRID + ']')).forEach(
+            watch
+        );
 
         // call if SigactionLoaded function is defined
         if (isFunc(window['SigactionLoaded'])) {
@@ -145,7 +145,6 @@
         }
     }
     window.addEventListener('DOMContentLoaded', initialize);
-
 
     // Public API
     /**
@@ -245,7 +244,7 @@
             // remove signame
             args.shift();
             // invoke actions
-            acts.forEach(function (action) {
+            acts.forEach(function(action) {
                 try {
                     action.act.apply(action.ctx, args);
                     ninvoke++;
