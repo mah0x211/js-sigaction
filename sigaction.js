@@ -58,8 +58,8 @@
             elm[SIGCTX].evs.forEach(function(ev) {
                 elm.removeEventListener(ev, raise);
             });
-            // void context
-            elm[SIGCTX] = null;
+            // delete context
+            delete elm[SIGCTX];
         }
     }
 
