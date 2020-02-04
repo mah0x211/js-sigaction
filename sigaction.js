@@ -29,7 +29,6 @@
 
     // constants
     const SIGCTX = '_signal_ctx';
-    const ATTRID = 'sigaction';
     // protected-variables
     const SIGACT = {};
 
@@ -71,25 +70,34 @@
     }
 
     function watch(elm) {
-        if (isElm(elm) && elm.dataset[ATTRID]) {
+        if (isElm(elm)) {
             // remove old context
             if (elm[SIGCTX]) {
                 unwatch(elm);
             }
 
-            const attr = elm.dataset[ATTRID].split('|');
-            const name = attr[0].trim();
-            const evs = (attr[1] || '').split(',').map(function(str) {
-                return str.trim();
-            });
-            const args = (attr[2] || '').split(',').map(function(str) {
-                return str.trim();
-            });
-
-            if (attr.length < 2 || attr.length > 3) {
-                throw new SyntaxError(
-                    'data-signal format must be signame|event,...|arg,...'
-                );
+            const name = (elm.dataset['saName'] || '').trim();
+            if (name === '') {
+                throw new SyntaxError('data-sa-name cannot be empty');
+            }
+            const args = (elm.dataset['saArgs'] || '')
+                .split(',')
+                .map(function(str) {
+                    return str.trim();
+                });
+            const evs = (elm.dataset['saEvents'] || '')
+                .split(',')
+                .map(function(str) {
+                    str = str.trim();
+                    if ('on' + str in elm) {
+                        return str;
+                    }
+                    throw new SyntaxError(
+                        `data-sa-events "${str}" is not supported event`
+                    );
+                });
+            if (evs.length === 0) {
+                throw new SyntaxError('data-sa-events cannot be empty');
             }
 
             // add events
@@ -110,7 +118,7 @@
         records.forEach(function(record) {
             switch (record.type) {
                 case 'attributes':
-                    if (record.target.dataset[ATTRID]) {
+                    if ('saName' in record.target.dataset) {
                         watch(record.target);
                     } else {
                         unwatch(record.target);
@@ -133,9 +141,7 @@
             attributes: true
         });
         // register elements
-        toArray(document.querySelectorAll('*[data-' + ATTRID + ']')).forEach(
-            watch
-        );
+        toArray(document.querySelectorAll('*[data-sa-name]')).forEach(watch);
 
         // call if SigactionLoaded function is defined
         if (isFunc(window['SigactionLoaded'])) {
