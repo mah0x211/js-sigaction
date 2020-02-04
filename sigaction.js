@@ -128,7 +128,7 @@
     }
 
     function initialize() {
-        window.removeEventListener('load', initialize);
+        window.removeEventListener('DOMContentLoaded', initialize);
         new MutationObserver(onDOMChanged).observe(document.body, {
             childList: true,
             subtree: true,
