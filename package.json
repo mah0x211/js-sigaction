@@ -1,6 +1,6 @@
 {
     "name": "js-sigaction",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "description": "",
     "main": "sigaction.js",
     "dependencies": {
@@ -30,5 +30,5 @@
     "bugs": {
         "url": "https://github.com/mah0x211/js-sigaction/issues"
     },
-    "homepage": "https://github.com/mah0x211/js-sigaction#readme"
+    "homepage": "https://github.com/mah0x211/js-sigaction"
 }
