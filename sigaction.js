@@ -78,32 +78,26 @@
     }
 
     function watch(elm) {
-        if (isElm(elm)) {
-            // remove old context
-            if (elm[SIGCTX]) {
-                unwatch(elm);
-            }
-
+        // remove old context
+        unwatch(elm);
+        if (isElm(elm) && 'saName' in elm.dataset) {
             const name = (elm.dataset['saName'] || '').trim();
-            if (name === '') {
-                throw new SyntaxError('data-sa-name cannot be empty');
-            }
             const args = parseArgs(elm.dataset['saArgs'] || '');
-            const evs = (elm.dataset['saEvents'] || '')
-                .split(',')
-                .map(function(str) {
-                    str = str.trim();
-                    if ('on' + str in elm) {
-                        return str;
-                    }
-                    console.warn(
-                        `data-sa-events "${str}" is not supported in ${elm}`
-                    );
-                });
+            const evs = (elm.dataset['saEvents'] || '').split(',').map(str => {
+                str = str.trim();
+                if ('on' + str in elm) {
+                    return str;
+                }
+                console.warn(
+                    `data-sa-events "${str}" is not supported in ${elm}`
+                );
+            });
 
-            // add events
-            if (evs.length > 0) {
-                evs.forEach(function(ev) {
+            if (name === '') {
+                console.error('data-sa-name cannot be empty');
+            } else if (evs.length > 0) {
+                // add events
+                evs.forEach(ev => {
                     elm.addEventListener(ev, raise);
                 });
                 // save context
@@ -121,11 +115,7 @@
         records.forEach(function(record) {
             switch (record.type) {
                 case 'attributes':
-                    if ('saName' in record.target.dataset) {
-                        watch(record.target);
-                    } else {
-                        unwatch(record.target);
-                    }
+                    watch(record.target);
                     break;
 
                 case 'childList':
