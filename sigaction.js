@@ -51,6 +51,14 @@
         return Array.prototype.slice.call(nodeList);
     }
 
+    function parseArgs(str) {
+        str = str.trim();
+        if (str === '') {
+            return [];
+        }
+        return JSON.parse('[' + str + ']');
+    }
+
     function unwatch(elm) {
         if (isElm(elm) && elm[SIGCTX]) {
             // remove events
@@ -80,11 +88,7 @@
             if (name === '') {
                 throw new SyntaxError('data-sa-name cannot be empty');
             }
-            const args = (elm.dataset['saArgs'] || '')
-                .split(',')
-                .map(function(str) {
-                    return str.trim();
-                });
+            const args = parseArgs(elm.dataset['saArgs'] || '');
             const evs = (elm.dataset['saEvents'] || '')
                 .split(',')
                 .map(function(str) {
