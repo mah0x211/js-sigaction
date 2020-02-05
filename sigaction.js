@@ -131,7 +131,8 @@
         new MutationObserver(onDOMChanged).observe(document.body, {
             childList: true,
             subtree: true,
-            attributes: true
+            attributes: true,
+            attributeFilter: ['data-sa-name', 'data-sa-args', 'data-sa-events']
         });
         // register elements
         toArray(document.querySelectorAll('*[data-sa-name]')).forEach(watch);
