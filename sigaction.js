@@ -96,24 +96,23 @@
                     if ('on' + str in elm) {
                         return str;
                     }
-                    throw new SyntaxError(
-                        `data-sa-events "${str}" is not supported event`
+                    console.warn(
+                        `data-sa-events "${str}" is not supported in ${elm}`
                     );
                 });
-            if (evs.length === 0) {
-                throw new SyntaxError('data-sa-events cannot be empty');
-            }
 
             // add events
-            evs.forEach(function(ev) {
-                elm.addEventListener(ev, raise);
-            });
-            // save context
-            elm[SIGCTX] = {
-                name: name,
-                evs: evs,
-                args: args
-            };
+            if (evs.length > 0) {
+                evs.forEach(function(ev) {
+                    elm.addEventListener(ev, raise);
+                });
+                // save context
+                elm[SIGCTX] = {
+                    name: name,
+                    evs: evs,
+                    args: args
+                };
+            }
         }
     }
 
